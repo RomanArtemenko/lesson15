@@ -9,12 +9,10 @@ import scrapy
 
 
 class OffwhiteItem(scrapy.Item):
-    # define the fields for your item here like:
-    name = scrapy.Field()
-    brand = scrapy.Field()
-    price = scrapy.Field()
+
     description = scrapy.Field()
-    currency = scrapy.Field()
+    title = scrapy.Field()
+    price = scrapy.Field()
     size = scrapy.Field()
-    image = scrapy.Field()
+    images = scrapy.Field()
     
