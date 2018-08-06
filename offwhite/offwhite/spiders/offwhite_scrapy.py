@@ -9,10 +9,6 @@ class OffWhiteScrapy(scrapy.Spider):
     headers = {'Connection':'keep-alive', 'User-Agent:':'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'}
 
     def parse(self, response):
-        for url in self.start_urls:
-            yield scrapy.Request(url=url, callback=self.list_item, headers=self.headers)
-
-    def list_item(self, response):
         list_url = response.xpath('//article[@class="product"]/a/@href').extract()[:3]
         print("List URL : %s" % list_url)
         for url in list_url:
@@ -22,8 +18,8 @@ class OffWhiteScrapy(scrapy.Spider):
         item = OffwhiteItem()
 
         item['description'] = ''.join(self.get_description(response))
-        item['title'] = self.get_title(response)[0].strip()
-        item['price'] = self.get_price(response)[0]
+        item['title'] = self.get_title(response)
+        item['price'] = self.get_price(response)
         item['size'] = self.get_size(response)
         item['images'] = self.get_images(response)
 
@@ -33,10 +29,10 @@ class OffWhiteScrapy(scrapy.Spider):
         return response.xpath('//div[@class="product-description"]/p[@id="details"]/@content').extract()
 
     def get_title(self, response):
-        return response.xpath('//span[@class="prod-title"]/text()').extract()
+        return response.xpath('//span[@class="prod-title"]/text()').extract_first().strip()
 
     def get_price(self, response):
-        return response.xpath('//div[@class="price"]/span[@itemprop="price"]/@content').extract()
+        return response.xpath('//div[@class="price"]/span[@itemprop="price"]/@content').extract_first()
 
     def get_size(self, response):
         return response.xpath('//div[@class="styled-radio"]/label/text()').extract()
